@@ -31,8 +31,18 @@ python preprocess.py --cic_dir path/to/cic/data --output_dir data/
 
 This creates `.pt` files for training, validation, and testing.
 
----
+## 📊 Generating Dataset Statistics
 
+To support augmenters such as `FeatureCorruption`, `DataPoisoner`, or `FeatureSwap`, the dataset must be pre-analyzed to extract statistical properties.
+
+### 🔧 Usage
+
+Run the following script before training:
+
+```bash
+python stats.py --data_dir data/cic --dataset_type network --plots minimal
+
+---
 ## 🚀 Training Workflow
 
 Train the model using:
