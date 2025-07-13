@@ -1,0 +1,74 @@
+model:
+  - name: vqvae
+    hidden_dim: 512
+    num_embeddings: 1024
+    embedding_dim: 256
+    num_res_blocks: 4
+    commitment_cost: 0.25
+    vq_loss_weight: 2.0
+    reconstruction_loss_weight: 1.0
+    classification_loss_weight: 5.0
+    replay_loss_weight: 10.0
+    dropout_rate: 0.01
+    capacity_per_label: 200
+    replay_sample_size: 128
+    replay_update_frequency:  1
+    use_replay_buffer: True
+    sampling_strategy: "temporal"  # "balanced" or "temporal"
+    temporal_decay:  0.9
+    min_samples_per_label:  5
+    use_conv_groups: 1
+    use_efficient_attention: True
+
+epochs: 14
+batch_size: 2048
+lr: 1e-4
+optimizer: AdamW
+weight_decay: 0.00
+max_norm : 0.9
+balance_classes: True
+true_incremental: True
+trainer_type: incremental
+use_mixed_precision: True
+
+# project
+use_wandb: True
+wandb_project: 
+wandb_entity: 
+wandb_run_name: 
+output_dir: results/output
+data_path: data/cic
+scheduler: cosine_restart
+scheduler_params:
+  - T_0: 1
+    eta_min: 7.106840358531577e-8
+stats_path: data/cic/statistics/dataset_statistics.json
+losses:
+  - name: focal
+    weight:  100
+    gamma: 15
+    alpha: 0.5
+    reduction: mean
+
+
+use_augmentation: False
+target_class: 0
+target_labels: [2,3,4,5,6]
+augment_factor: 0.25
+augmenter_configs:
+  - name: FeatureCorruption
+    corruption_strength: 3.0
+    probability: 1.0
+  - name: LabelNoise
+    flip_probability: 1.0
+    probability: 1.0
+  - name: MixUp
+    alpha: 0.01
+    probability: 1.0
+  - name: FeatureSwap
+    swap_ratio: 1.0
+    probability: 1.0
+  - name: DataPoisoner
+    epsilon: 2.0
+    probability: 1.0
+

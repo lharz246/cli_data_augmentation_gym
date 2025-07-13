@@ -1,0 +1,65 @@
+# Tabnet
+model:
+  - name: tabnet
+    embed_dim: 1024
+    n_steps: 3
+    relaxation: 1.0
+    sparsity_loss_weight: 1e-4
+    virtual_batch_size: 256
+    class_0_weight: 1.0
+
+
+epochs: 14
+batch_size: 2048
+lr: 7.5e-8
+optimizer: AdamW
+weight_decay: 0.00
+max_norm : 0.9
+balance_classes: True
+true_incremental: True
+trainer_type: incremental
+use_mixed_precision: True
+
+# project
+use_wandb: True
+wandb_project: 
+wandb_entity: 
+wandb_run_name: 
+output_dir: results/output
+data_path: data/cic
+scheduler: cosine_restart
+scheduler_params:
+  - T_0: 1
+    eta_min: 7.106840358531577e-8
+stats_path: data/cic/statistics/dataset_statistics.json
+losses:
+  - name: focal
+    weight: 10
+    gamma: 7.5
+    alpha: 0.5
+    reduction: mean
+  - name: ewc
+    weight: 1100
+
+
+use_augmentation: False
+target_class: 0
+target_labels: [2,3,4,5,6]
+augment_factor: 0.25
+augmenter_configs:
+  - name: FeatureCorruption
+    corruption_strength: 3.0
+    probability: 1.0
+  - name: LabelNoise
+    flip_probability: 1.0
+    probability: 1.0
+  - name: MixUp
+    alpha: 0.01
+    probability: 1.0
+  - name: FeatureSwap
+    swap_ratio: 1.0
+    probability: 1.0
+  - name: DataPoisoner
+    epsilon: 2.0
+    probability: 1.0
+
