@@ -116,32 +116,70 @@ This setting allows controlled experiments that simulate memory degradation unde
 ## 📎 Sample Configuration (`config.yaml`)
 
 ```yaml
+# Model parameters
 model:
   - name: resmlp
     embed_dim: 4096
     depth: 8
-    dropout: 0.4
+    width_schedule: bottleneck
+    bottleneck_factor: 0.4
+    dropout: 0.2
+    residual_strength: 0.8
+    class_0_preservation: True
 
-train_cfg:
-  epochs: 14
-  batch_size: 2048
-  use_augmentation: true
-  true_incremental: true
 
-data_cfg:
-  data_path: data/cic
-  stats_path: data/cic/statistics/dataset_statistics.json
-  augmentation_cfg:
-    - name: FeatureCorruption
-      corruption_strength: 3.0
-    - name: LabelNoise
-      flip_probability: 1.0
-    - name: MixUp
-      alpha: 0.01
-    - name: FeatureSwap
-      swap_ratio: 1.0
-    - name: DataPoisoner
-      epsilon: 2.0
+epochs: 14
+batch_size: 2048
+lr: 1e-4
+optimizer: AdamW
+weight_decay: 0.00
+max_norm : 0.9
+balance_classes: True
+true_incremental: True
+trainer_type: incremental
+use_mixed_precision: True
+# project
+use_wandb: false
+wandb_project: 
+wandb_entity: 
+wandb_run_name: 
+output_dir: results/output
+data_path: data/cic
+scheduler: cosine_restart
+scheduler_params:
+  - T_0: 1
+    eta_min: 7.106840358531577e-8
+stats_path: data/cic/statistics/dataset_statistics.json
+losses:
+  - name: focal
+    weight: 10
+    gamma: 7.5
+    alpha: 0.5
+    reduction: mean
+  - name: ewc
+    weight: 1500
+
+use_augmentation: False
+target_class: 0
+target_labels: [2,3,4,5,6]
+augment_factor: 0.25
+
+augmenter_configs:
+  - name: FeatureCorruption
+    corruption_strength: 3.0
+    probability: 1.0
+  - name: LabelNoise
+    flip_probability: 1.0
+    probability: 1.0
+  - name: MixUp
+    alpha: 0.01
+    probability: 1.0
+  - name: FeatureSwap
+    swap_ratio: 1.0
+    probability: 1.0
+  - name: DataPoisoner
+    epsilon: 2.0
+    probability: 1.0
 ```
 
 ---
