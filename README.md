@@ -41,8 +41,8 @@ Run the following script before training:
 
 ```bash
 python stats.py --data_dir data/cic --dataset_type network --plots minimal
+```
 
----
 ## 🚀 Training Workflow
 
 Train the model using:
